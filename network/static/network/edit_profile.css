@@ -1,0 +1,129 @@
+.hidden{
+    display: none;
+}
+
+.edit-profile {
+    max-width: 500px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.alert {
+    margin-top: 10px;
+}
+
+.edit-profile-form {
+    background-color: #fff;
+    border: 1px solid #ddd;
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    font-weight: bold;
+}
+
+.form-group input[type="text"],
+.form-group input[type="date"],
+.form-group select,
+.form-group textarea {
+    width: 100%;
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    transition: border-color 0.2s;
+}
+
+.form-group input[type="file"] {
+    display: block;
+}
+
+.custom-file-label::after {
+    content: attr(data-default);
+}
+
+.custom-file-input:focus + .custom-file-label,
+.custom-file-label.has-focus {
+    border-color: #007bff;
+    box-shadow: 0 0 3px rgba(0, 123, 255, 0.25);
+}
+
+.custom-file-label {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+.btn {
+    padding: 10px 20px;
+    margin-top: 10px;
+}
+
+.btn-secondary {
+    background-color: #ccc;
+    color: #333;
+    border: none;
+}
+
+.btn-success {
+    background-color: #28a745;
+    color: #fff;
+    border: none;
+}
+
+.custom-file-upload + label {
+    cursor: pointer;
+}
+
+.country-field select {
+    width: 100%;
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    transition: border-color 0.2s;
+}
+
+
+#character-counter {
+    display: none;
+    color: #ff9393;
+    font-size: 12px;
+    margin-top: 6px;
+}
+
+
+
+
+/* Media queries for smaller screens (e.g., mobile devices) */
+
+@media screen and (max-width: 768px) {
+    .edit-profile {
+        padding: 10px;
+    }
+
+    .edit-profile-form {
+        padding: 15px;
+    }
+
+    .form-group input[type="text"],
+    .form-group input[type="date"],
+    .form-group select,
+    .form-group textarea {
+        font-size: 14px;
+    }
+
+    .btn {
+        padding: 8px 16px;
+    }
+
+    .country-field select {
+        font-size: 14px;
+    }
+}

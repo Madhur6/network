@@ -1,0 +1,109 @@
+{% extends 'network/layout.html' %}
+{% load static %}
+{% load i18n %}
+
+{% block extra_css %}
+    <link href="{% static 'network/user_profile.css' %}" rel="stylesheet">
+{% endblock %}
+
+{% block body %}
+<div class="container mb-3">
+    <div class="user-profile mb-3">
+        {% if user_obj.profile.image.url %}
+           <img src="{{ user_obj.profile.image.url }}" alt="{{ user_obj.username }}" class="round-picture profile-picture">
+        {% endif %}
+
+        <h2> {{user_obj.username}} </h2>
+        
+        <div class="row followers">
+            <p class="mr-3"><span class="followers_label">Followers: </span>{{ followers|length|default:"0" }} </p>
+            <p class="mr-3"><span class="followers_label">Following: </span>{{ following|length|default:"0" }} </p>
+        </div>
+
+        <div class="follow-unfollow">
+            {% if user.id != user_obj.id %}
+            <form action="{% url 'network:follow_unfollow' user_id=user_obj.id %}" method="post">
+                {% csrf_token %}
+                {% if user in followers %}
+                   <button type="submit" class="btn btn-light btn-sm mb-3 unfollow">
+                        <i class="fas fa-user-minus"></i> {% trans "following" %}
+                   </button>
+                {% else %}
+                <button type="submit" class="btn btn-light btn-sm mb-3 follow">
+                    <i class="fas fa-user-plus"></i> {% trans "follow" %}
+               </button>
+               {% endif %}
+            </form>
+            {% else %}
+            <a href="{% url 'network:edit_profile' %}">
+                <button class="btn btn-light btn-sm mb-3">
+                    <i class="fas fa-pencil-alt"></i> {% trans "Edit Profile" %}
+                </button>
+            </a>
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="card bio info-card text-muted user-bio">
+        <div class="profile-item">
+            <label><i class="fas fa-user profile-icon"></i>{% trans "Name:" %}</label>
+            <p>
+                {{ user_obj.profile.name|default:"---" }}
+            </p>
+        </div>
+        
+        <div class="profile-item">
+            <label><i class="fas fa-hourglass-start profile-icon"></i>{% trans "Birth:" %}</label>
+            <p>
+                {{ user_obj.profile.date_of_birth|date:"d.m.Y"|default:"---" }}
+            </p>
+        </div>
+
+        <div class="profile-item">
+            <label><i class="fas fa-globe profile-icon"></i>{% trans "Country:" %}</label>
+            <p>
+                {{ user_obj.profile.country.name|default:"---" }}
+            </p>
+        </div>
+
+        <div class="about">
+            <label><i class="fas fa-pencil-square profile-icon"></i>{% trans "About:" %}</label>
+            <p class="about-text text-muted">
+                {{ user_obj.profile.about|default:"---" }}
+            </p>
+        </div>
+    </div>
+</div>
+
+<hr>
+
+{% for post in page_obj.object_list %}
+    <div class="card mb-3 col-md-6 mx-auto p-3 shadow">
+        {% include "network/posts.html" %}
+    </div>
+{% empty %}
+    <div class="no-posts">
+        {% trans "No posts yet" %}
+    </div>
+{% endfor %}
+
+
+<footer style="margin-top: 20%;">
+    {% include "network/paginator.html" %}
+</footer>
+
+
+
+{% block script %}
+<script src="{% static 'network/comments.js' %}"></script>
+<script src="{% static 'network/posts.js' %}"></script>
+
+
+{% if user.is_authenticated %}
+<script src="{% static 'network/authenticated.js' %}"></script>
+<script src="{% static 'network/like.js' %}"></script>
+{% endif %}
+{% endblock %}
+
+
+{% endblock %}

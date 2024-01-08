@@ -1,0 +1,47 @@
+{% extends "network/layout.html" %}
+{% load static %}
+{% load i18n %}
+
+{% block body %}
+   {% if user.is_authenticated and add_post %}
+   <div class="card p-3 col-md-6 mx-auto shadow">
+    <form action="{% url 'network:new_post_comment' action='post' %}" method="post">
+        {% csrf_token %}
+        <div class="form-group">
+            {{ post_form.content }}
+        </div>
+        <div style="font-size: 10px;" class="text-muted mb-auto" id="character-counter"> 225 characters remaining </div>
+        <input class="btn btn-primary btn-sm mb-3 mt-3" type="submit" value='{% trans "Post" %}'>
+    </form>
+   </div>
+   {% endif %}
+
+   {% for post in page_obj.object_list %}
+   <div class="card mb-3 mt-3 p-3 col-md-6 mx-auto shadow">
+    {% include "network/posts.html" %}
+   </div>
+   {% empty %}
+   <div class="no-posts">
+    {% trans "No posts yet" %}
+   </div>
+   {% endfor %}
+
+   <footer style="margin-top: 20%;">
+    {% include "network/paginator.html" %}
+   </footer>
+
+{% endblock %}
+
+
+{% block script %}
+    <script src="{% static 'network/posts.js' %}"></script>
+    <script src="{% static 'network/comments.js' %}"></script>
+
+{% if user.is_authenticated %}
+    <script src="{% static 'network/authenticated.js' %}"></script>
+    <script src="{% static 'network/like.js' %}"></script>
+    <script src="{% static 'network/LightandDark.js' %}"></script>
+    <script src="{% static 'network/characterCounter.js' %}"></script>
+{% endif %}
+
+{% endblock %}

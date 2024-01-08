@@ -1,0 +1,41 @@
+{% load i18n %}
+
+<nav class="page-nav bg-light">
+    <ul class="pagination justify-content-center">
+        {% if page_obj.has_previous %}
+        <li class="page-item">
+            <a class="page-link" href="?page=1">&laquo; {% trans "first" %} </a>
+        </li>
+        <li class="page-item">
+            <a class="page-link" href="?page={{ page_obj.previous_page_number }}">&laquo; {% trans "Previous" %} </a>
+        </li>
+        {% else %}
+        <li class="page-item disabled">
+            <a class="page-link" href="?page=1">&laquo; {% trans "first" %} </a>
+        </li>
+        <!-- when you are already on the first page, and the code is trying to generate a "Previous" link that points to page 0, ERROR: raise EmptyPage(_('That page number is less than 1')) -->
+        <li class="page-item disabled">
+            <a class="page-link" href="?page=1"> &laquo; {% trans "Previous" %} </a>
+        </li>
+        {% endif %}
+
+        {% if page_obj.has_next %}
+        <li class="page-item">
+            <a class="page-link" href="?page={{ page_obj.next_page_number }}"> {% trans "next" %} &raquo; </a>
+        </li>
+        <li class="page-item">
+            <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}"> {% trans "last" %} &raquo; </a>
+        </li>
+        {% else %}
+        <li class="page-item disabled">
+            <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}">{% trans "next" %} &raquo; </a>
+        </li>
+        <li class="page-item disabled">
+            <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}"> {% trans "last" %} &raquo; </a>
+        </li>
+        {% endif %}
+    </ul>
+    <div class="current-page">
+        {% trans "Page" %} {{ page_obj.number }} {% trans "of" %} {{ page_obj.paginator.num_pages }}
+    </div>
+</nav>

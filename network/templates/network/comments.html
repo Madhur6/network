@@ -1,0 +1,86 @@
+{% load i18n %}
+
+
+    <div class="comment" id="comment_{{comment.id}}">
+        <div class="comment-user mb-2">
+            <a style="text-decoration: none;" href="{% url 'network:user_profile' user_id=comment.user.id  %}">
+                <img class="round-picture comment-profile-picture img" src="{{ comment.user.profile.image.url }}" alt="profile picture" title="{{comment.user}}">
+                <h6 id="user-link" style="font-size: 15px;"> {{comment.user.username}} </h6>
+            </a>
+        </div>
+
+        {% if user.id == comment.user.id %}
+        <div class="delete-edit-panel">
+            <div class="dropdown" style="float: right;">
+                <a class="btn btn-sm icon-button" href="#" role="button" id="dropdown_{{comment.id}}" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <i class="fas fa-ellipsis-v"></i>
+                </a>
+
+                <div class="dropdown-menu" aria-labelledby="dropdown_{{comment.id}}">
+                    <button class="dropdown-item dropdown-edit" data-toggle="modal" data-target="#modal_edit_{{comment.id}}"> {% trans "Edit" %} </button>
+                    <button class="dropdown-item dropdown-delete" data-toggle="modal" data-target="#modal_delete_{{comment.id}}"> {% trans "Delete" %} </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- MODALS -->
+        <div class="modal fade delete-modal" id="modal_delete_{{comment.id}}" tabindex="-1" role="dialog" aria-labelledby="modal_delete_{{comment.id}}" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="modal_delete_{{comment.id}}_label"> {% trans "Are you sure?" %} </h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        {% trans "Are you sure you want to permanently delete this comment?" %}
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary modal-close" data-dismiss="modal"> {% trans "Close" %} </button>
+                        <button type="button" class="btn btn-primary modal-delete"> {% trans "Delete" %} </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal fade edit-modal" id="modal_edit_{{comment.id}}" tabindex="-1" role="dialog" aria-labelledby="modal_edit_{{comment.id}}" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="modal_edit_{{comment.id}}_label"> {% trans "Do u want to Edit this?" %} </h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary modal-close" data-dismiss="modal"> {% trans "Close" %} </button>
+                        <button type="button" class="btn btn-primary modal-save"> {% trans "Save" %} </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+
+        <div class="content comment-content">
+            <p class="text-muted"> {{ comment.content }} </p>
+        </div>
+        <button class="show-more-button-comment btn btn-link btn-sm">show-more</button>
+        
+        <div class="comment-date text-muted mt-2 mb-2" style="font-size: 11px;">
+            {% trans "commented:" %} {{ comment.date|timesince }} {% trans "ago" %}
+        </div>  
+
+        {% if user.is_authenticated %}
+        <div class="like-comment-control mb-3">
+            <div class="like-comment">
+                <div class="like-container">
+                    <div class="like-btn">
+                    </div>
+                    <span class="like-count badge badge-pill badge-warning"> {{comment.liked_by.count }} </span>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+    </div>

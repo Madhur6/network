@@ -1,0 +1,78 @@
+{% extends 'network/layout.html' %}
+{% load static %}
+{% load i18n %}
+
+{% block extra_css %}
+    <link href="{% static 'network/edit_profile.css' %}" rel="stylesheet">
+{% endblock %}
+
+{% block body %}
+   <div class="edit-profile">
+    {% if form.errors %}
+        {% for fields in form %}
+            {% for error in fields.errors %}
+            <div class="alert alert-danger">
+                <strong> {{ error|escape }} </strong>
+            </div>
+            {% endfor %}
+        {% endfor %}
+        {% for error in form.non_field_errors %}
+            <div class="alert alert-danger">
+                <strong> {{ error|escape }} </strong>
+            </div>
+        {% endfor %}
+    {% endif %}
+
+    <div class="alert alert-danger hidden" id="file-size-error">
+
+        <strong>Image file exceeds {{max_file_size}} mb size limit </strong>
+    </div>
+    <div class="alert alert-danger hidden" id="file-type-error">
+        <strong> {% trans "File must be type image" %} </strong>
+    </div>
+
+    <div class="edit-profile-form info-card">
+        <!-- default encoding type: (application/x-www-form-urlencoded => It URL-encodes the form data and appends it to the URL as query parameters when the form is submitted. This is suitable for sending simple text data but not suitable for uploading files or binary data.)
+        custom encoding type: (multipart/form-data => This encoding type is used when you need to upload files. It splits the form data into multiple parts and encodes them individually, allowing for the safe transmission of binary data. The server can then reconstruct the data on the backend to handle file uploads correctly.)                    -->
+
+        <form action="{% url 'network:edit_profile' %}" method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="form-group">
+                {{ form.name.label_tag }}
+                {{ form.name }}
+            </div>
+            <div class="form-group">
+                {{ form.date_of_birth.label_tag }}
+                {{ form.date_of_birth }}
+            </div>
+            <div class="form-group">
+                {{ form.about.label_tag}}
+                {{ form.about}}
+                <div id="character-counter"> 225 characters remaining </div>
+            </div>
+            <div class="form-group">
+                {{ form.country.label_tag }}
+                {{ form.country }}
+            </div>
+            <div class="form-group">
+                {{ form.image.label_tag }}
+                <div class="custom-image">
+                    <!-- Accept="image/*": Types of files that the server accepts. -->
+                    <input type="file" name="image" class="custom-image-input" accept="image/*" id="image_id">
+                    <!-- <label class="custom-image-label" data-browse="{% trans 'Browse' %}" for="image_id" data-default="{% trans 'Choose file' %}"> {% trans 'Choose file' %} </label> -->
+                </div>
+            </div>
+            <button class="btn btn-light btn-sm" name="cancel" value="clicked"> {% trans 'Cancel' %} </button>
+            <input type="submit" class="btn btn-success btn-sm" value="Submit">
+        </form>
+    </div>
+        
+   </div>
+
+
+{% endblock %}
+
+
+{% block script %}
+   <script src="{% static 'network/edit_profile.js' %}"></script>
+{% endblock %}

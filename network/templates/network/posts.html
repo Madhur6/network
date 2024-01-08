@@ -1,0 +1,124 @@
+{% load i18n %}
+
+
+<div class="post-comment-element">
+    <div class="post" id="post_{{post.id}}">
+        <div class="post-user mb-2">
+            <a style="text-decoration: none;" href="{% url 'network:user_profile' user_id=post.user.id  %}">
+                <img class="round-picture post-profile-picture img" src="{{ post.user.profile.image.url }}" alt="profile picture" title="{{post.user}}">
+                <h6 id="user-link"> {{post.user.username}} </h6>
+            </a>
+        </div>
+
+        {% if user.id == post.user.id %}
+        <div class="delete-edit-panel">
+            <div class="dropdown" style="float: right;">
+                <a class="btn btn-sm icon-button" href="#" role="button" id="dropdown_{{post.id}}" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <i class="fas fa-ellipsis-v"></i>
+                </a>
+
+                <div class="dropdown-menu" aria-labelledby="dropdown_{{post.id}}">
+                    <button class="dropdown-item dropdown-edit" data-toggle="modal" data-target="#modal_edit_{{post.id}}"> {% trans "Edit" %} </button>
+                    <button class="dropdown-item dropdown-delete" data-toggle="modal" data-target="#modal_delete_{{post.id}}"> {% trans "Delete" %} </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- MODALS -->
+        <div class="modal fade delete-modal" id="modal_delete_{{post.id}}" tabindex="-1" role="dialog" aria-labelledby="modal_delete_{{post.id}}" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="modal_delete_{{post.id}}_label"> {% trans "Are you sure?" %} </h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        {% trans "Are you sure you want to permanently delete this post?" %}
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary modal-close" data-dismiss="modal"> {% trans "Close" %} </button>
+                        <button type="button" class="btn btn-primary modal-delete"> {% trans "Delete" %} </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal fade edit-modal" id="modal_edit_{{post.id}}" tabindex="-1" role="dialog" aria-labelledby="modal_edit_{{post.id}}" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="modal_edit_{{post.id}}_label"> {% trans "Do u want to Edit this?" %} </h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary modal-close" data-dismiss="modal"> {% trans "Close" %} </button>
+                        <button type="button" class="btn btn-primary modal-save"> {% trans "Save" %} </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+
+        <div class="content post-content">
+            <p> {{ post.content }} </p>
+        </div>
+        <button class="show-more-button btn btn-link btn-sm">show-more</button>
+        
+        <div class="post-date text-muted mt-2 mb-2" style="font-size: 11px;">
+            {% trans "Posted:" %} {{ post.date|timesince }} {% trans "ago" %}
+        </div>  
+
+        {% if user.is_authenticated %}
+        <div class="like-comment-control mb-3">
+            <div class="like-comment">
+                <div class="like-container">
+                    <div class="like-btn">
+                    </div>
+                    <span class="like-count badge badge-pill badge-warning"> {{post.liked_by.count }} </span>
+                </div>
+                
+                <div>
+                    <button class="comment-button btn btn-primary" data-toggle="collapse" data-target="#post_{{ post.id }} ~ .comment-section" aria-expanded="false" aria-controls="comment-section">{% trans "Comments" %} {% if post.comments.all.count > 0 %} <span class="badge badge-pill badge-info comment-count"> {{ post.comments.all.count }}</span>{% endif %} </button>
+                </div>
+                <!-- ARIA (Accessible Rich Internet Applications) -->
+                <!-- ***********The tilde (~) is a CSS selector known as the general sibling combinator. ***************** -->
+                <!-- Targeting the element with the class comment-section that is a sibling of the element with the ID post_{{ post.id }} -->
+            </div>
+        </div>
+        {% endif %}
+    </div>
+
+    <hr>
+
+    {% if user.is_authenticated %}
+    <div class="comment-section collapse multi-collapse mt-3" style="font-size: small;">
+        
+        {% for comment in post.comments.all %}
+            {% include "network/comments.html"%}
+            <hr class="comment-separation">
+        {% endfor %}
+
+
+        <div class="comment-form-wrapper mt-3">
+            <form action="{% url 'network:new_post_comment' action='comment'%}" method="post">
+                {% csrf_token %}
+                <div class="comment-form-content">
+                    {{ comment_form.content}}
+                    <div>
+                        <button type="submit" class="btn btn-info comment-button mb-2 mt-2">
+                            <i class="fas fa-comment"></i> <!-- Font Awesome comment icon -->
+                        </button>
+                    </div>
+
+                    <input type="hidden" name="postId" value="{{ post.id }}">
+                </div>
+            </form>
+        </div>
+    </div>
+    {% endif %}
+</div>

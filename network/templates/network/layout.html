@@ -1,0 +1,80 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>{% block title %}Social Network{% endblock %}</title>
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+        <link href="{% static 'network/styles.css' %}" rel="stylesheet">
+
+        <link href="https://fonts.googleapis.com/css2?family=Amatic+SC:wght@400;700&family=Permanent+Marker&family=Poppins:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+        <script src="https://kit.fontawesome.com/b930e26f61.js" crossorigin="anonymous"></script>
+        {% block extra_css %}
+        {% endblock %}
+    </head>
+    <body>
+
+        <nav class="navbar navbar-expand-lg navbar-light" style="background-color: #f8f9fa;">
+            <a class="navbar-brand" href="{% url 'network:index' %}"><strong><span style="color: rgb(242, 175, 41);">N</span>e<span style="color: rgb(242, 98, 41);">t</span>w<span style="color: rgb(0, 255, 229);">o</span>rk</strong></a>
+          
+            <div>
+              <ul class="navbar-nav mr-auto">
+                {% if user.is_authenticated %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'network:user_profile' user_id=user.id %}"><strong>{{ user.username }}</strong></a>
+                    </li>
+                {% endif %}
+                <li class="nav-item">
+                  <a class="nav-link" href="{% url 'network:index' %}">All Posts</a>
+                </li>
+                {% if user.is_authenticated %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'network:following' %}">Following</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'network:logout' %}">Log Out</a>
+                    </li>
+                {% else %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'network:login' %}">Log In</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'network:register' %}">Register</a>
+                    </li>
+                {% endif %}
+              </ul>
+            </div>
+            
+            <!-- For light & Dark modes -->
+            <!-- <div class="navbar-nav" style="border: 2px solid ;">
+                <form class="nav-item">
+                    <input type="radio" id="light" name="theme" value="light">
+                    <label for="light">Light</label>
+                    <input type="radio" id="dark" name="theme" value="dark">
+                    <label for="dark">Dark</label>
+                </form>
+            </div> -->
+
+
+            <div class="navbar-nav">
+                <label class="rocker rocker-small">
+                    <input type="checkbox">
+                    <span id="light" class="switch-left">Yes</span>
+                    <span id="dark" class="switch-right">No</span>
+                </label>
+            </div>
+
+        </nav>
+        
+        <div class="body">
+            {% block body %}
+            {% endblock %}
+        </div>
+
+        <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ho+j7jyWK8fNQe+A12Hb8AhRq26LrZ/JpcUGGOn+Y7RsweNrtN/tE3MoK7ZeZDyx" crossorigin="anonymous"></script>
+        {% block script %}
+
+        {% endblock %}
+    </body>
+</html>
